@@ -1,4 +1,4 @@
-function  height_map = get_surface(surface_normals, image_size, method)
+function  height_map = get_surface(surface_normals, image_size)
 % surface_normals: 3 x num_pixels array of unit surface normals
 % image_size: [h, w] of output height map/image
 % height_map: height map of object
@@ -9,13 +9,19 @@ q_array = zeros( image_size(1), image_size(2) );
 
 for pos_y = 1:1:image_size(1)
 	for pos_x = 1:1:image_size(2)
-		p_array(pos_y,pos_x) = - surface_normals(pos_y,pos_x,1) / surface_normals(pos_y,pos_x,3);
-		q_array(pos_y,pos_x) = - surface_normals(pos_y,pos_x,2) / surface_normals(pos_y,pos_x,3);
+		if surface_normals(pos_y,pos_x,3) == 0
+			fprintf('hello surf normal')
+		end
+		p_array(pos_y,pos_x) = - surface_normals(pos_y,pos_x,2) / surface_normals(pos_y,pos_x,1);
+		q_array(pos_y,pos_x) = - surface_normals(pos_y,pos_x,3) / surface_normals(pos_y,pos_x,1);
 	end
 end
 
+% p_array = imgaussfilt( p_array, 3);
+% q_array = imgaussfilt( q_array, 3);
 
-height_map = zeros( image_size(1), image_size(2) )+50;
+% height_map = zeros( image_size(1), image_size(2) )+50;
+height_map = zeros( image_size(1), image_size(2) );
 
 for pos_y = 1:1:image_size(1)
 	for pos_x = 1:1:image_size(2)
@@ -24,6 +30,7 @@ for pos_y = 1:1:image_size(1)
 		% y-direction first, and x-direction later
 		y_height_map = sum(p_array(pos_y, 1:pos_x) ) + sum(q_array(1:pos_y, 1) );
 		height_map(pos_y,pos_x) = (x_height_map + y_height_map ) / 2.0;
+
 		% height_map(pos_y,pos_x) = x_height_map;
 		% height_map(pos_y,pos_x) = y_height_map;
 
@@ -40,19 +47,11 @@ for pos_y = 1:1:image_size(1)
 		%	end
 
 		% height_map(pos_y, pos_x) = height_map(pos_y, pos_x) - (pos_x+pos_y-2)*0.0;
-		height_map(pos_y, pos_x) = height_map(pos_y, pos_x) + (pos_y-1)*0.6 + ( pos_x-pos_y)*0.25;
+		% height_map(pos_y, pos_x) = height_map(pos_y, pos_x) + (pos_y-1)*0.6 + ( pos_x-pos_y)*0.25;
 	end
 end
 
-
-% %% <<< fill in your code below >>>
-% 
-%     switch method
-%         case 'column'
-%         case 'row'
-%         case 'average'
-%         case 'random'
-%     end
+% height_map = imgaussfilt( height_map, 5);
 
 end
 

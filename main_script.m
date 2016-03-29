@@ -2,11 +2,11 @@
 full_path = './yale_FaceImages_For_Asgn#1/';
 subject_name = 'yaleB01';
 num_images = 11;
+% num_images = 3;
 % face_annot = [210, 80, 270, 250 ];
 % face_annot = [240, 100, 210, 220 ];
 face_annot = [250, 110, 190, 200 ];
 image_size = [face_annot(4)+1, face_annot(3)+1];
-integration_method = 'average'; % 'column', 'row', 'average', 'random'
 
 %% ------------------------------------------ %%
 %% Image Load
@@ -17,31 +17,41 @@ integration_method = 'average'; % 'column', 'row', 'average', 'random'
 %% Preprocessing
 %% ------------------------------------------ %%
 pre_imarray = preproc(imarray, num_images, face_annot, ambient_image);
+pre_imarray = imgaussfilt(pre_imarray, 5);
 
-% imshow( pre_imarray(:,:,1) )
+%	%% %%%%%%%%%%%%%%%%% Tas 1 : Calibrated Photomatric Stereo %%%%%%%%%%%%%%%%%%%%%%%% %%
+%	%% ------------------------------------------ %%
+%	%% get albedo and surface normals
+%	%% ------------------------------------------ %%
+%	[albedo_image, surface_normals] = photometric_stereo(pre_imarray, light_dirs, num_images);
+%	
+%	%% ------------------------------------------ %%
+%	%% Compute height_map from surface normals
+%	%% ------------------------------------------ %%
+%	height_map = get_surface(surface_normals, image_size);
 
+%	%% ------------------------------------------ %%
+%	%% Display outputs
+%	%% ------------------------------------------ %%
+%	display_output(albedo_image, height_map);
+%	plot_surface_normals(surface_normals);
+
+%% %%%%%%%%%%%%%%%%% Tas 2 : Uncalibrated Photomatric Stereo %%%%%%%%%%%%%%%%%%%%%%% %%
 %% ------------------------------------------ %%
 %% get albedo and surface normals
 %% ------------------------------------------ %%
-[albedo_image, surface_normals] = photometric_stereo(pre_imarray, light_dirs, num_images);
 
-%% reconstruct height map (you need to fill in get_surface for different integration methods)
-height_map = get_surface(surface_normals, image_size, integration_method);
+[albedo_image_2, surface_normals_2, light_dirs_2] = uncal_stereo(pre_imarray, num_images, image_size);
 
-%% display albedo and surface
-display_output(albedo_image, height_map);
+%% ------------------------------------------ %%
+%% Compute height_map from surface normals
+%% ------------------------------------------ %%
+height_map_2 = get_surface(surface_normals_2, image_size);
 
-%% plot surface normal
-plot_surface_normals(surface_normals);
-
-%% save output (optional) -- note that negative values in the normal images will not save correctly!
-save_flag = 0
-if save_flag
-    imwrite(albedo_image, sprintf('%s_albedo.jpg', subject_name), 'jpg');
-    imwrite(surface_normals, sprintf('%s_normals_color.jpg', subject_name), 'jpg');
-    imwrite(surface_normals(:,:,1), sprintf('%s_normals_x.jpg', subject_name), 'jpg');
-    imwrite(surface_normals(:,:,2), sprintf('%s_normals_y.jpg', subject_name), 'jpg');
-    imwrite(surface_normals(:,:,3), sprintf('%s_normals_z.jpg', subject_name), 'jpg');    
-end
+%% ------------------------------------------ %%
+%% Display outputs
+%% ------------------------------------------ %%
+display_output(albedo_image_2, height_map_2);
+%	plot_surface_normals(surface_normals_2);
 
 

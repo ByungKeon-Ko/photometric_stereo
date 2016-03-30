@@ -26,26 +26,27 @@ surface_normals = zeros(image_size(1), image_size(2), 3);
 for i = 1:1:image_size(1)
 	for j = 1:1:image_size(2)
 		albedo_image(i,j) = norm( reshape(B_matrix(i,j,:), 1, 3) );
-		surface_normals(i,j,:) = B_matrix(i,j,:) / albedo_image(i,j);
-	end
-end
-
-for ind_y = 1:1:image_size(1)
-	for ind_x = 1:1:image_size(2)
-		if (albedo_image(ind_y, ind_x) == NaN )
-			fprintf('hello bug in albedo %d%d', ind_y, ind_x);
-		end
-	end
-end
-
-for ind_y = 1:1:image_size(1)
-	for ind_x = 1:1:image_size(2)
-		if (surface_normals(ind_y, ind_x,1) == NaN ) | (surface_normals(ind_y, ind_x,2) == NaN ) | (surface_normals(ind_y, ind_x,3) == NaN ) 
-			fprintf('hello bug in surface normals');
-		end
+		tmp_normal = B_matrix(i,j,:) / albedo_image(i,j);
+		surface_normals(i,j,:) = [tmp_normal(2), tmp_normal(3), tmp_normal(1) ];
 	end
 end
 
 
 end
+
+%	for ind_y = 1:1:image_size(1)
+%		for ind_x = 1:1:image_size(2)
+%			if (albedo_image(ind_y, ind_x) == NaN )
+%				fprintf('hello bug in albedo %d%d', ind_y, ind_x);
+%			end
+%		end
+%	end
+%	
+%	for ind_y = 1:1:image_size(1)
+%		for ind_x = 1:1:image_size(2)
+%			if (surface_normals(ind_y, ind_x,1) == NaN ) | (surface_normals(ind_y, ind_x,2) == NaN ) | (surface_normals(ind_y, ind_x,3) == NaN ) 
+%				fprintf('hello bug in surface normals');
+%			end
+%		end
+%	end
 

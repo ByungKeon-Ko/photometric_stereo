@@ -12,13 +12,13 @@ for pos_y = 1:1:image_size(1)
 		if surface_normals(pos_y,pos_x,3) == 0
 			fprintf('hello surf normal')
 		end
-		p_array(pos_y,pos_x) = - surface_normals(pos_y,pos_x,2) / surface_normals(pos_y,pos_x,1);
-		q_array(pos_y,pos_x) = - surface_normals(pos_y,pos_x,3) / surface_normals(pos_y,pos_x,1);
+		p_array(pos_y,pos_x) = - surface_normals(pos_y,pos_x,1) / surface_normals(pos_y,pos_x,3);
+		q_array(pos_y,pos_x) = - surface_normals(pos_y,pos_x,2) / surface_normals(pos_y,pos_x,3);
 	end
 end
 
-% p_array = imgaussfilt( p_array, 3);
-% q_array = imgaussfilt( q_array, 3);
+p_array = imgaussfilt( p_array, 3);
+q_array = imgaussfilt( q_array, 3);
 
 % height_map = zeros( image_size(1), image_size(2) )+50;
 height_map = zeros( image_size(1), image_size(2) );
@@ -51,7 +51,7 @@ for pos_y = 1:1:image_size(1)
 	end
 end
 
-% height_map = imgaussfilt( height_map, 5);
+height_map = imgaussfilt( height_map, 5);
 
 end
 

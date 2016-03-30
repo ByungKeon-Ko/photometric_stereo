@@ -1,7 +1,7 @@
 %% Spring 2014 CS 543 Assignment 1
 %% Arun Mallya and Svetlana Lazebnik
 
-function display_output(albedo, height_map)
+function display_output(albedo, height_map, algo_name)
 % NOTE: h x w is the size of the input images
 % albedo: h x w matrix of albedo 
 % height_map: h x w matrix of surface heights
@@ -13,7 +13,7 @@ H = flipud(fliplr(height_map));
 A = flipud(fliplr(albedo));
 
 figure, imshow(albedo);
-title('Albedo');
+title(strcat(algo_name, ' Albedo') );
 
 figure;
 mesh(H, X, Y, A);
@@ -21,7 +21,7 @@ axis equal;
 xlabel('Z')
 ylabel('X')
 zlabel('Y')
-title('Height Map')
+title(strcat(algo_name, 'Height Map') )
 view(-60,20)
 colormap(gray)
 set(gca, 'XDir', 'reverse')

@@ -1,3 +1,0 @@
-# photometric_stereo
-
-# ffff

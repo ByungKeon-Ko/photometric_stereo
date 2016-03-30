@@ -1,4 +1,4 @@
-function  height_map = get_surface(surface_normals, image_size)
+function  height_map = get_surface(surface_normals, image_size, algo_name)
 % surface_normals: 3 x num_pixels array of unit surface normals
 % image_size: [h, w] of output height map/image
 % height_map: height map of object
@@ -12,8 +12,13 @@ for pos_y = 1:1:image_size(1)
 		if surface_normals(pos_y,pos_x,3) == 0
 			fprintf('hello surf normal')
 		end
-		p_array(pos_y,pos_x) = - surface_normals(pos_y,pos_x,1) / surface_normals(pos_y,pos_x,3);
-		q_array(pos_y,pos_x) = - surface_normals(pos_y,pos_x,2) / surface_normals(pos_y,pos_x,3);
+		if strcmp(algo_name, 'Calib')
+			p_array(pos_y,pos_x) =   surface_normals(pos_y,pos_x,1) / surface_normals(pos_y,pos_x,3);
+			q_array(pos_y,pos_x) =   surface_normals(pos_y,pos_x,2) / surface_normals(pos_y,pos_x,3);
+		elseif strcmp(algo_name, 'UnCalib')
+			p_array(pos_y,pos_x) = - surface_normals(pos_y,pos_x,1) / surface_normals(pos_y,pos_x,3);
+			q_array(pos_y,pos_x) = - surface_normals(pos_y,pos_x,2) / surface_normals(pos_y,pos_x,3);
+		end
 	end
 end
 
